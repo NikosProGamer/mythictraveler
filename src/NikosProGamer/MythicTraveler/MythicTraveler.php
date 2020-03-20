@@ -1,17 +1,4 @@
 <?php
-# MADE BY:
-#  __    __                                          __        __  __  __                     
-# /  |  /  |                                        /  |      /  |/  |/  |                    
-# $$ |  $$ |  ______   _______    ______    ______  $$ |____  $$/ $$ |$$/   _______  __    __ 
-# $$  \/$$/  /      \ /       \  /      \  /      \ $$      \ /  |$$ |/  | /       |/  |  /  |
-#  $$  $$<  /$$$$$$  |$$$$$$$  |/$$$$$$  |/$$$$$$  |$$$$$$$  |$$ |$$ |$$ |/$$$$$$$/ $$ |  $$ |
-#   $$$$  \ $$    $$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |$$ |$$ |$$ |$$ |      $$ |  $$ |
-#  $$ /$$  |$$$$$$$$/ $$ |  $$ |$$ \__$$ |$$ |__$$ |$$ |  $$ |$$ |$$ |$$ |$$ \_____ $$ \__$$ |
-# $$ |  $$ |$$       |$$ |  $$ |$$    $$/ $$    $$/ $$ |  $$ |$$ |$$ |$$ |$$       |$$    $$ |
-# $$/   $$/  $$$$$$$/ $$/   $$/  $$$$$$/  $$$$$$$/  $$/   $$/ $$/ $$/ $$/  $$$$$$$/  $$$$$$$ |
-#                                         $$ |                                      /  \__$$ |
-#                                         $$ |                                      $$    $$/ 
-#                                         $$/                                        $$$$$$/
 
 namespace NikosProGamer\MythicTraveler;
 
@@ -38,7 +25,7 @@ class MythicTraveler extends PluginBase implements Listener{
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         $configPath = $this->getDataFolder()."config.yml";
         if(!file_exists($configPath)){
-            $this->getLogger()->critical("It appears that this is the first time you are using Mythic Traveler! This plugin does not function with the default config.yml, so please edit it to your preferred settings before attempting to use it.");
+            $this->getLogger()->critical("§6It appears that this is the first time you are using §d§lMythic §6Traveler§r§6! This plugin does not function with the default §dconfig.yml§6, so please edit it to your preferred settings before attempting to use it.");
             $this->saveDefaultConfig();
             $this->getServer()->getPluginManager()->disablePlugin($this);
             return;
@@ -48,8 +35,8 @@ class MythicTraveler extends PluginBase implements Listener{
         $this->config->getAll();
         $version = $this->config->get("VERSION");
         $this->pluginVersion = $this->getDescription()->getVersion();
-        if($version < "0.0.1"){
-            $this->getLogger()->warning("You have successfully updated the Mythic Selector to v".$this->pluginVersion." but you are running a config from v$version! Please delete your previous config for the new features to be enabled and to prevent unwanted errors! Plugin will remain disabled...");
+        if($version < "0.0.2"){
+            $this->getLogger()->warning("§6You have successfully updated the §d§lMythic §6Traveler §r§6to §cv§d".$this->pluginVersion." §6but you are running a config from §cv§d$version§6! Please delete your previous config for the new features to be enabled and to prevent unwanted errors! Plugin will remain disabled...");
             $this->getServer()->getPluginManager()->disablePlugin($this);
         }
         if($this->config->getNested("Selector.Enabled")){
@@ -61,13 +48,13 @@ class MythicTraveler extends PluginBase implements Listener{
             $this->forceSlot = $this->config->getNested("Selector.Force-Slot");
         } else{
             $this->selectorSupport = false;
-            $this->getLogger()->info("The Selector is disabled in the config.yml file!");
+            $this->getLogger()->info("§6The Selector is disabled in the §dconfig.yml §6file!");
         }
         if($this->config->getNested("Command.Enabled")){
             $this->commandSupport = true;
             $this->cmdName = str_replace("/","",$this->config->getNested("Command.Name"));
             if($this->cmdName == null || $this->cmdName == ""){
-                $this->getLogger()->critical("Invalid UI command string found, disabling plugin...");
+                $this->getLogger()->critical("§6Invalid UI command string found, disabling plugin...");
                 $this->getServer()->getPluginManager()->disablePlugin($this);
                 return;
             } else{
@@ -80,7 +67,7 @@ class MythicTraveler extends PluginBase implements Listener{
             }
         } else{
             $this->commandSupport = false;
-            $this->getLogger()->info("The /servers command is disabled in the config.yml file!");
+            $this->getLogger()->info("§6The §d/servers §6command is disabled in the §dconfig.yml §6file!");
         }
         $transferType = $this->config->get("Transfer-Type");
         switch(strtolower($transferType)){
@@ -90,7 +77,7 @@ class MythicTraveler extends PluginBase implements Listener{
             case "hybrid":
             case "internal":
                 if($this->config->get("World-CMD") == null || $this->config->get("World-CMD") == ""){
-                    $this->getLogger()->critical("Null world command string found, limiting to external use!");
+                    $this->getLogger()->critical("§cNull §6world command string found, limiting to external use!");
                     $this->extLimit = true;
                 } else{
                     $mode = $this->config->get("World-CMD-Mode");
@@ -101,18 +88,18 @@ class MythicTraveler extends PluginBase implements Listener{
                         $this->extLimit = false;
                         $this->cmdMode = 1;
                     } else{
-                        $this->getLogger()->critical("Null world command mode found, limiting to external use!");
+                        $this->getLogger()->critical("§cNull §6world command mode found, limiting to external use!");
                         $this->extLimit = true;
                     }
                 }
                 break;
             case false:
             case null:
-                $this->getLogger()->critical("Null transfer type found, disabling plugin!");
+                $this->getLogger()->critical("§cNull §6transfer type found, disabling plugin!");
                 $this->getServer()->getPluginManager()->disablePlugin($this);
                 return;
             default:
-                $this->getLogger()->critical("Invalid transfer type! Input type: ".$transferType." not supported, disabling plugin!");
+                $this->getLogger()->critical("§6Invalid transfer type! Input type: §c".$transferType." §6not supported, disabling plugin!");
                 $this->getServer()->getPluginManager()->disablePlugin($this);
                 return;
         }
@@ -138,12 +125,12 @@ class MythicTraveler extends PluginBase implements Listener{
                 $level = $this->getServer()->getLevelByName($value[2]);
                 $level = $this->getServer()->getLevelByName($value[2]);
                 if($level === null){
-                    if($value[1] == "xenoCreative"){
-                        $this->getLogger()->critical("You are using a default server/world configuration! Please change this to YOUR servers/worlds for the plugin to function properly! Plugin will remain disabled until default config is changed...");
+                    if($value[2] == "xenoCreative"){
+                        $this->getLogger()->critical("§6You are using a default §dserver/world §6configuration! Please change this to §cYOUR §dservers/worlds §6for the plugin to function properly! Plugin will remain disabled until default config is changed...");
                         $this->getServer()->getPluginManager()->disablePlugin($this);
                         return;
                     } else{
-                        $this->getLogger()->critical("Invalid world name! Name: ".$value[2]." was not found, disabling plugin! Be sure you use the name of the world folder for the 'WorldAlias' key in the config!");
+                        $this->getLogger()->critical("§6Invalid world name! Name: §c".$value[2]." §6was not found, disabling plugin! Be sure you use the name of the world folder for the 'WorldAlias' key in the config!");
                         $this->getServer()->getPluginManager()->disablePlugin($this);
                         return;
                     }
@@ -151,7 +138,7 @@ class MythicTraveler extends PluginBase implements Listener{
                 if(isset($value[3])){
                     $search = $value[3];
                     if(!isset($value[4])){
-                        $this->getLogger()->warning("Null path/URL! Input: ".$value[1]);
+                        $this->getLogger()->warning("§cNull §6path/URL! Input: §c".$value[1]);
                     }
                 }
                 array_push($this->list, $target);
@@ -163,7 +150,7 @@ class MythicTraveler extends PluginBase implements Listener{
                     case'path':
                         break;
                     default:
-                        $this->getLogger()->warning("Invalid image type! Input: ".$value[1].TF::RESET.TF::YELLOW." Image type: ".$search.TF::RESET.TF::YELLOW." not supported. ");
+                        $this->getLogger()->warning("§6Invalid image type! Input: §c".$value[1].TF::RESET.TF::YELLOW." §6Image type: §c".$search.TF::RESET.TF::YELLOW." §6not supported.");
                 }
             }
         }

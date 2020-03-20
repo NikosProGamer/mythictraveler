@@ -1,12 +1,12 @@
 name: MythicTraveler
 author: NikosProGamer
-version: 0.0.1
+version: 0.0.2
 main: NikosProGamer\MythicTraveler\MythicTraveler
 api: 3.0.0
-description: View all your servers or worlds in a list using FormAPI!
+description: View all your servers or worlds in a list using FormAPI! Made for Mythic Network.
 commands:
-  navicompass:
-    description: Get info on Mythic Traveler!
+  mythictraveler:
+    description: Get info on Mythic Traveler! (Coming Soon)
     permission: mythictraveler.info
 permissions:
   navicompass.info:
